@@ -1,0 +1,12 @@
+# data.yaml (version compacte)
+
+# /scratch/ousman/caltech_prepare/sorties/config/data.yaml
+
+train: /scratch/ousman/caltech_prepare/sorties/config/train_pos_images.txt
+
+val:   /scratch/ousman/caltech_prepare/sorties/config/val_pos_images.txt
+
+test:  /scratch/ousman/caltech_prepare/sorties/config/test_pos_images.txt
+
+names:
+  0: person

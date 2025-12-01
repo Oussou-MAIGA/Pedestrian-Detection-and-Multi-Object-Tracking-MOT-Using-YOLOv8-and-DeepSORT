@@ -1,0 +1,15 @@
+train: /home/ousman/links/scratch/pieton_tm/INRIA_Pedestrian/train/images
+val: /home/ousman/links/scratch/pieton_tm/INRIA_Pedestrian/valid/images
+test: /home/ousman/links/scratch/pieton_tm/INRIA_Pedestrian/test/images
+test1: /home/ousman/links/scratch/pieton_tm/dataset_caltech/tests/set06/V002/images
+
+nc: 1
+names: ['person']
+
+
+#roboflow:
+ # workspace: pascal-to-yolo-8yygq
+  #project: inria-person-detection-dataset
+  #version: 1
+  #license: CC BY 4.0
+  #url: https://universe.roboflow.com/pascal-to-yolo-8yygq/inria-person-detection-dataset/dataset/1
