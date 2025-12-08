@@ -1,169 +1,210 @@
-# README – Détection et Suivi de Piétons (YOLOv8s + DeepSORT)
+# Détection et Suivi de Piétons  
+**Haar/SVM · HOG/SVM · YOLOv8s · DeepSORT · ByteTrack**
 
-## 1. Informations d’exécution (Cluster Trilium)
-
-- JobName : yolo_caltech  
-- Nœud utilisé : trig0042  
-- GPUs utilisés : 4  
-- CPU alloué : 1 (96 disponibles par nœud dans compute_full_node)  
-- Temps d’exécution total : 2 h 05 min 41 s  
-- Limite fixée : 7 h  
-- ExitCode : 0:0  
-- Script exécuté : train_yolo.slurm  
-- Journaux :  
-  - StdOut : /home/ousman/links/scratch/pieton_tm/modeles/yolov8/yolo_caltech_<jobID>.out  
-  - StdErr : /home/ousman/links/scratch/pieton_tm/modeles/yolov8/yolo_caltech_<jobID>.err  
+Projet du cours — Université de Moncton  
+Auteur : **Ousmane Maiga**  
+Superviseur : **Pr. Moulay Akhloufi – PRIME Lab**
 
 ---
 
-## 2. Présentation du projet
+# 1. Description du projet
 
-Ce projet traite de la détection et du suivi de piétons à l’aide de YOLOv8s pour la détection et DeepSORT pour le suivi multi-objet.
+Ce projet compare trois approches de **détection de piétons** :
 
-Le modèle final utilisé est :
+- Haar + SVM  
+- HOG + SVM  
+- YOLOv8s (meilleur modèle)
 
-best.pt  
-Un modèle YOLOv8s pré-entraîné COCO puis fine-tuné sur Caltech.
+et deux algorithmes de **suivi multi-objets** :
 
-Ce modèle est évalué :  
-- sur le test Caltech (sets 06–10),  
-- en cross-dataset sur INRIA.
+- DeepSORT (avec ReID MobileNet)  
+- ByteTrack  
+
+Objectifs :
+
+- analyser pourquoi les détecteurs classiques échouent en scène réelle  
+- étudier la généralisation cross-dataset (Caltech ↔ INRIA)  
+- mesurer l’impact de la qualité des détections sur le tracking  
+- produire des résultats visuels + deux vidéos finales de suivi  
 
 ---
 
-## 3. Organisation du projet
+# 2. Structure du projet 
 
-```
 projet_detection_suivi_pietons/
+│
 ├── README.md
-├── train_yolo.slurm
-├── README_logs
-├── track_ReID_deepsort.py
-├── config/
-│   ├── data_caltech.yaml
-│   ├── data_inria.yaml
-│   └── liste_chemin_image.sh
+│
+├── images/ 
+│ ├── haar_caltech_1.png
+│ ├── haar_caltech_2.png
+│ ├── haar_inria_1.png
+│ ├── haar_inria_2.png
+│ ├── hog_inria_1.png
+│ ├── hog_inria_2.png
+│ ├── yolo_inria_1.jpg
+│ ├── yolo_inria_2.jpg
+│
+├── videos/ 
+│ ├── DeepSort.mp4
+│ └── ByteTrack.mp4
+│
 ├── models/
-│   └── best.pt
-└── logs/
-    ├── yolo_caltech_115655.out
-    └── yolo_caltech_115655.err
+│ └── caltech.pt ← MEILLEUR modèle (YOLOv8s entraîné sur Caltech)
+│
+├── scripts/
+│ ├── feature_haar_inria.py
+│ ├── features_hog_inria.py
+│ ├── patch_and_negatifs_inria.py
+│ ├── entrainement_svm_inria.py
+│ ├── entrainement_svm_hog_inria.py
+│ ├── detect_inria_svm.py
+│ ├── detect_inria_hog_svm.py
+│ ├── track_ReID_deepsort.py
+│ ├── eval_MOT.py
+│ ├── convert_pred_to_MOT.py
+│ ├── convert_kitti_GT_to_MOT.py
+│ ├── convertir_vbb.py
+│ ├── extract_images.py
+│ ├── extract_annotations.py
+│ ├── video_to_frames.py
+│ └── images_to_videos.py
+│
+└── config/
+├── data_caltech.yaml
+├── data_inria.yaml
+└── liste_chemin_image.sh
 
-```
-
-## 4. Entraînement YOLOv8s sur Caltech
-
-L’entraînement s’effectue via train_yolo.slurm.
-
-### Modèle utilisé
-- yolov8s.pt (pré-entraîné COCO)
-
-### Dataset
-- Caltech Pedestrian  
-- Splits générés :  
-  - train : sets 00–04  
-  - val : set 05  
-  - test : sets 06–10  
-
-### Commande
-
-```
-yolo detect train   model="$MODEL"   data="$CFG/data.yaml"   imgsz=640 epochs=40 batch=16 device=0,1,2,3 workers=8   cache=False amp=False verbose=True   project="$PROJECT_OUT"   name=caltech_person
-```
-
-Le modèle final best.pt est généré automatiquement.
 
 ---
 
-## 5. Résultats
+# 3. Téléchargement des datasets (liens officiels)
 
-### A. Évaluation Caltech → Caltech
+Les datasets **ne sont pas fournis dans le ZIP** (trop volumineux).  
+Télécharger depuis les liens officiels :
 
-Commande :
+### 🔹 **Caltech Pedestrian Dataset**  
+https://www.vision.caltech.edu/Image_Datasets/CaltechPedestrians/
 
-```
-yolo detect val   model=models/best.pt   data=config/data_caltech.yaml   split=test   imgsz=640
-```
+### 🔹 **INRIA Person Dataset**  
+https://github.com/olt/inria-object-detection
 
-Résultat :
+### 🔹 **KITTI Tracking Dataset**  
+https://www.cvlibs.net/datasets/kitti/eval_tracking.php
 
-- mAP@50 = 0.483
+Créer ensuite :
 
-### B. Cross-dataset Caltech → INRIA
+datasets/Caltech/
+datasets/INRIA/
+datasets/KITTI/
 
-Commande :
-
-```
-yolo detect val   model=models/best.pt   data=config/data_inria.yaml   split=test   imgsz=640   name=caltech_to_inria_test
-```
-
-Résultat :
-
-- mAP@50 = 0.689
 
 ---
 
-## 6. Suivi de piétons (DeepSORT)
+# 4. Exemples de détection (version propre B — 420px)
 
-track_ReID_deepsort.py effectue le suivi multi-objet à partir des détections YOLO.
-
-### Arguments
-
-- --img_dir  
-- --dets_dir  
-- --out_dir  
-- --embedder (défaut : mobilenet)  
-- --max_age (défaut : 10)  
-- --n_init (défaut : 3)  
-- --max_cosine_distance (défaut : 0.4)
-
-### Exemple 1 – paramètres par défaut
-
-```
-python track_ReID_deepsort.py ^
-  --img_dir  "C:\Users\technicien\...\kitti_tracking\training\image_02\0012" ^
-  --dets_dir "C:\Users\technicien\...\runs\detect\predict\0012\labels" ^
-  --out_dir  "C:\Users\technicien\...\Caltech_Pedestrian\ousmane\0012"
-```
-
-### Exemple 2 – paramètres personnalisés
-
-```
-python track_ReID_deepsort.py   --img_dir  /chemin/kitti/image_02/0012   --dets_dir /chemin/predictions/0012/labels   --out_dir  /chemin/tracking/0012   --embedder mobilenet   --max_age 10   --n_init 3   --max_cosine_distance 0.4
-```
-
-Le script génère des images annotées et des fichiers YOLO contenant classe cx cy w h track_id.
+## Haar + SVM
+<img src="images/haar_caltech_1.png" width="420">
+<img src="images/haar_caltech_2.png" width="420">
+<img src="images/haar_inria_1.png" width="420">
+<img src="images/haar_inria_2.png" width="420">
 
 ---
 
-## 7. Conclusion
-
-- Le modèle YOLOv8s fine-tuné sur Caltech constitue le meilleur modèle.  
-- Caltech → Caltech : mAP@50 = 0.483  
-- Caltech → INRIA : mAP@50 = 0.689  
-- Le domain gap explique pourquoi INRIA → Caltech est faible.  
-- DeepSORT complète la détection par un suivi multi-image robuste.
+## HOG + SVM
+<img src="images/hog_inria_1.png" width="420">
+<img src="images/hog_inria_2.png" width="420">
 
 ---
 
-## 8. Reproductibilité
+## YOLOv8s (meilleur modèle : `caltech.pt`)
+<img src="images/yolo_inria_1.jpg" width="420">
+<img src="images/yolo_inria_2.jpg" width="420">
 
-### Générer les splits Caltech
-```
-bash config/liste_chemin_image.sh
-```
+---
 
-### Entraîner sur Caltech
-```
+# 5. Résultats de suivi 
+
+Les vidéos sont dans :  
+videos/DeepSort.mp4
+videos/ByteTrack.mp4
+
+
+## DeepSORT  
+`videos/DeepSort.mp4`  
+<img src="images/yolo_inria_1.jpg" width="420">
+
+## ByteTrack  
+`videos/ByteTrack.mp4`  
+<img src="images/yolo_inria_2.jpg" width="420">
+
+---
+
+# 6. Entraînement YOLOv8s (Caltech)
+
+### SLURM (Cluster Trilium)
 sbatch train_yolo.slurm
-```
 
-### Cross-dataset
-```
-yolo detect val   model=models/best.pt   data=config/data_inria.yaml   split=test
-```
 
-### Suivi DeepSORT
-```
-python track_ReID_deepsort.py --img_dir ... --dets_dir ... --out_dir ...
-```
+### Informations d’exécution  
+- GPU : 4  
+- Temps total : **2 h 05 min 41 s**  
+- Modèle obtenu → **models/caltech.pt**
+
+---
+
+# 7. Évaluation YOLOv8s
+
+### ✔ Caltech → INRIA
+
+
+yolo detect val model=models/caltech/best.pt data=config/data_inria.yaml split=test
+
+→ **mAP@50 = 0.689**
+
+---
+
+# 8. Suivi DeepSORT
+
+python track_ReID_deepsort.py
+--img_dir path/imgs
+--dets_dir path/yolo_preds
+--out_dir output/
+--embedder mobilenet
+--max_age 10 --n_init 3 --max_cosine_distance 0.4
+
+
+Sorties :
+- images annotées  
+- labels YOLO + track_id
+
+---
+
+# 9. Reproductibilité complète
+
+## (1) Télécharger datasets  
+→ Voir section 3
+
+## (2) Convertir Caltech (.seq + .vbb → images + YOLO)
+python convertir_vbb.py
+python extract_images.py
+python extract_annotations.py
+
+## (3) Générer splits
+bash config/liste_chemin_image.sh
+
+## (4) Entraîner YOLO
+sbatch train_yolo.slurm
+
+
+## (5) Suivi
+python track_ReID_deepsort.py ...
+python bytetrack.py ...
+
+---
+
+# 10. Modèle final utilisé
+
+models/caltech/best.pt
+
+---
