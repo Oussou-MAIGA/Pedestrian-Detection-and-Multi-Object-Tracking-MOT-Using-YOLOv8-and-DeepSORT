@@ -124,7 +124,7 @@ projet_detection_suivi_pietons/
 
 ```
 
-3. Datasets (liens officiels)
+# 3. Datasets (liens officiels)
 Les datasets sont trop volumineux pour être versionnés.
 Ils doivent être téléchargés depuis les sites officiels puis placés dans datasets/.
 
@@ -141,14 +141,12 @@ Repo : https://github.com/olt/inria-object-detection
 
 Dossier cible : datasets/INRIA/
 
-🔹 KITTI Tracking (nom officiel)
+🔹 KITTI Tracking 
 Site : https://www.cvlibs.net/datasets/kitti/eval_tracking.php
 
 Dossier cible : datasets/KITTI/
 
 Une fois les archives KITTI extraites, vous obtenez la structure officielle, par exemple :
-
-
 
 datasets/KITTI/
  └── tracking/
@@ -159,17 +157,20 @@ datasets/KITTI/
              ├── 0012/
              ├── 0019/
              └── ...
+
 L’idée est simplement de placer les images de tracking dans datasets/KITTI/...
 en respectant l’organisation native de KITTI.
 
-4. Résultats de détection
+# 4. Résultats de détection
+
 Haar + SVM (Caltech / INRIA)
 <p align="center"> <img src="images/haar_caltech_1.png" width="260"/> <img src="images/haar_caltech_2.png" width="260"/> </p> <p align="center"> <img src="images/haar_inria_1.png" width="260"/> <img src="images/haar_inria_2.png" width="260"/> </p>
 HOG + SVM (INRIA)
 <p align="center"> <img src="images/hog_inria_1.png" width="260"/> <img src="images/hog_inria_2.png" width="260"/> </p>
 YOLOv8s (modèle entraîné sur Caltech, testé sur INRIA)
 <p align="center"> <img src="images/yolo_caltech_inria_1.jpg" width="260"/> <img src="images/yolo_caltech_inria_2.jpg" width="260"/> </p>
-5. Résultats de suivi
+
+# 5. Résultats de suivi
 Les vidéos finales de suivi sont dans :
 
 videos/DeepSort.mp4
@@ -182,11 +183,9 @@ Voir la vidéo DeepSORT
 ByteTrack
 Voir la vidéo ByteTrack
 
-6. Environnement logiciel (Cluster Trilium)
+# 6. Environnement logiciel (Cluster Trilium)
 Sur le cluster Trilium, avant d’exécuter l’entraînement ou les évaluations YOLO,
 les modules et bibliothèques suivants sont chargés / installés :
-
-
 
 module load python/3.11.5
 module load gcc opencv/4.12.0 python script-stick
@@ -198,6 +197,7 @@ source /chemin/vers/mon_env/bin/activate
 pip install --no-index \
   -f /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic \
   pywavelets scikit-learn ultralytics
+
 Ces commandes sont exécutées avant :
 
 sbatch train_yolo.slurm
@@ -208,8 +208,8 @@ yolo detect predict ...
 
 yolo track ...
 
-7. Modèle YOLOv8s (base + fine-tuning)
-7.1 Modèle de base (pré-entraîné COCO)
+# 7. Modèle YOLOv8s (base + fine-tuning)
+## 7.1 Modèle de base (pré-entraîné COCO)
 Fichier : yolov8s.pt
 
 Téléchargement officiel :
@@ -217,13 +217,10 @@ https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov8s.pt
 
 Ce modèle est utilisé dans train_yolo.slurm comme point de départ :
 
-
-
 MODEL="yolov8s.pt"
-7.2 Modèle final (fine-tuné sur Caltech)
+
+## 7.2 Modèle final (fine-tuné sur Caltech)
 Le fine-tuning sur Caltech produit le meilleur modèle du projet (celui utilisé dans l’article) :
-
-
 
 modeles/caltech_person/weights/best.pt
 Ce modèle :
@@ -236,10 +233,8 @@ est ensuite réutilisé pour l’évaluation Caltech → INRIA (cross-dataset),
 
 sert de modèle unique pour tous les tests et pour les deux trackers (DeepSORT et ByteTrack).
 
-8. Entraînement YOLOv8s sur Caltech
+# 8. Entraînement YOLOv8s sur Caltech
 L’entraînement se fait via le script SLURM :
-
-
 
 sbatch train_yolo.slurm
 Dans ce script :
@@ -252,12 +247,11 @@ les paramètres par défaut (batch, epochs, etc.) sont ajustés pour le cluster.
 
 À la fin de l’entraînement, Ultralytics valide automatiquement sur le split test de Caltech :
 
-
-
 yolo detect val \
   model=modeles/caltech_person/weights/best.pt \
   data=config/data_caltech.yaml \
   split=test
+
 Ce yolo val fournit les performances officielles Caltech → Caltech
 utilisées dans le rapport (mAP@50, F1, etc.).
 
@@ -265,15 +259,14 @@ Temps d’exécution observé sur Trilium :
 
 ~ 2 h 05 min 41 s sur 4 GPUs (H100).
 
-9. Évaluation YOLOv8s (cross-dataset Caltech → INRIA)
+# 9. Évaluation YOLOv8s (cross-dataset Caltech → INRIA)
 Après l’entraînement sur Caltech, on réutilise le même modèle :
-
-
 
 yolo detect val \
   model=modeles/caltech_person/weights/best.pt \
   data=config/data_inria.yaml \
   split=test
+
 Résultat principal (Caltech → INRIA) :
 
 mAP@50 ≈ 0.689
@@ -283,8 +276,9 @@ F1 et PR détaillés dans l’article (courbes PR/F1 + matrice de confusion).
 Dans le rapport, c’est ce cas Caltech → INRIA qui est considéré comme
 meilleur scénario global (modèle entraîné sur un dataset plus difficile et testé sur un plus simple).
 
-10. Suivi multi-objets
-10.1 DeepSORT (ReID MobileNet)
+# 10. Suivi multi-objets
+## 10.1 DeepSORT (ReID MobileNet)
+
 DeepSORT n’est pas intégré directement dans Ultralytics :
 on utilise le script Python track_ReID_deepsort.py, qui prend en entrée :
 
@@ -294,8 +288,7 @@ les détections YOLOv8s au format e (.txt) générées par Ultralytics,
 
 un dossier de sortie pour les frames annotées et les labels avec ID.
 
-10.1.1 Générer les détections YOLO sur KITTI
-
+### 10.1.1 Générer les détections YOLO sur KITTI
 
 yolo detect predict \
   model=modeles/caltech_person/weights/best.pt \
@@ -306,9 +299,8 @@ yolo detect predict \
   save_txt=True \
   project=runs/detect \
   name=kitti_0019_yolo
+
 Cela produit une structure de ce type :
-
-
 
 runs/detect/kitti_0019_yolo/
  ├── 000000.png
@@ -318,7 +310,7 @@ runs/detect/kitti_0019_yolo/
       ├── 000000.txt    # cls cx cy w h conf
       ├── 000001.txt
       └── ...
-10.1.2 Lancer DeepSORT
+### 10.1.2 Lancer DeepSORT
 
 
 python scripts/track_ReID_deepsort.py \
@@ -329,6 +321,7 @@ python scripts/track_ReID_deepsort.py \
   --max_age 10 \
   --n_init 3 \
   --max_cosine_distance 0.4
+
 Paramètres principaux :
 
 --img_dir : images KITTI d’une séquence (ex. 0019)
@@ -347,8 +340,6 @@ Paramètres principaux :
 
 Résultats :
 
-
-
 runs/tracking/deepsort_0019/
  ├── frames/
  │    ├── 000000.png      # image annotée (bbox + ID)
@@ -361,11 +352,10 @@ runs/tracking/deepsort_0019/
 Les vidéos finales visibles dans videos/DeepSort.mp4 sont construites
 à partir de ces frames via images_to_videos.py.
 
-10.2 ByteTrack (Ultralytics)
+## 10.2 ByteTrack (Ultralytics)
 ByteTrack est directement intégré dans Ultralytics via yolo track.
 
 Commande d’exemple (séquence KITTI 0019)
-
 
 yolo track \
   model="modeles/caltech_person/weights/best.pt" \
@@ -378,6 +368,7 @@ yolo track \
   save_json=True \
   project="runs/kitti_eval" \
   name="bytetrack_0019"
+
 model= : modèle YOLOv8s fine-tuné sur Caltech
 
 source= : dossier d’images KITTI pour une séquence
@@ -392,8 +383,6 @@ save_json=True : exporte les résultats en JSON (format MOT-compatible)
 
 Sorties typiques :
 
-
-
 runs/kitti_eval/bytetrack_0019/
  ├── bytetrack_0019.mp4        # vidéo annotée
  ├── labels/
@@ -401,6 +390,7 @@ runs/kitti_eval/bytetrack_0019/
  │    ├── 000001.txt
  │    └── ...
  └── predictions.json          # résultats pour évaluation MOT
+
 Ces fichiers peuvent ensuite être convertis et évalués avec :
 
 scripts/convert_Pred_to_MOT.py
@@ -409,7 +399,7 @@ scripts/eval_MOT.py
 
 pour obtenir les métriques IDF1, MOTA, etc., comme dans l’article.
 
-11. Reproductibilité (résumé)
+# 11. Reproductibilité (résumé)
 Charger l’environnement Trilium (Section 6)
 
 Télécharger et placer les datasets (Section 3)
@@ -418,35 +408,30 @@ Convertir Caltech en images + YOLO (scripts convertir_vbb.py, extract_images.py,
 
 Générer les splits :
 
-
-
  config/liste_chemin_image.sh
+
 Entraîner YOLOv8s sur Caltech :
 
-
-
 sbatch train_yolo.slurm
+
 → modèle : modeles/caltech_person/weights/best.pt
 → validation automatique Caltech → Caltech (yolo val split=test)
 
 Évaluer Caltech → INRIA :
 
-
-
 yolo detect val \
   model=modeles/caltech_person/weights/best.pt \
   data=config/data_inria.yaml \
   split=test
+
 Générer les détections KITTI (pour le tracking) avec yolo detect predict.
 
 Lancer DeepSORT avec track_ReID_deepsort.py.
 
 Lancer ByteTrack avec yolo track ... tracker="bytetrack.yaml".
 
-12. Modèle final du projet
+# 12. Modèle final du projet
 Le modèle unique utilisé dans tous les résultats de l’article est :
-
-
 
 modeles/caltech_person/weights/best.pt
 entraîné sur Caltech
@@ -457,15 +442,13 @@ testé en cross-dataset Caltech → INRIA (meilleure configuration)
 
 utilisé pour DeepSORT et ByteTrack sur KITTI.
 
-
 ::contentReference[oaicite:0]{index=0}
-
 ---
 
-# 👤 Contact
+# Contact
 
 Pour toute question concernant le projet, vous pouvez contacter :
 
-📧 **Ousmane Maiga**  
+**Ousmane Maiga**  
 **eom6713@umoncton.ca**
 
