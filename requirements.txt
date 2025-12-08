@@ -1,0 +1,8 @@
+ultralytics==8.2.0
+scikit-learn>=1.3
+opencv-python>=4.5
+numpy>=1.22
+pywavelets>=1.5
+torch>=2.1
+torchvision>=0.16
+matplotlib

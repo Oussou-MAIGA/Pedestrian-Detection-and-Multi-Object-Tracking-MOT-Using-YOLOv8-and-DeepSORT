@@ -1,3 +1,25 @@
+# TL;DR — Exécuter le projet en 30 secondes
+
+git clone [<URL_DU_REPO>](https://github.com/Oussou-MAIGA/Pedestrian-Detection-and-Multi-Object-Tracking-MOT-Using-YOLOv8-and-DeepSORT.git)
+cd projet_detection_suivi_pietons
+
+# Installer les dépendances (pour installation locale)
+pip install -r requirements.txt
+
+# Télécharger les datasets (Section 3)
+# puis entraîner YOLO :
+yolo detect train model=yolov8s.pt data=config/data_caltech.yaml
+
+# Évaluer Caltech → INRIA :
+yolo detect val model=modeles/caltech_person/weights/best.pt data=config/data_inria.yaml
+
+# Lancer DeepSORT :
+python scripts/track_ReID_deepsort.py --img_dir ... --dets_dir ...
+
+# Lancer ByteTrack :
+yolo track model=modeles/caltech_person/weights/best.pt tracker=bytetrack.yaml source=...
+
+
 ---
 
 # Technologies utilisées
