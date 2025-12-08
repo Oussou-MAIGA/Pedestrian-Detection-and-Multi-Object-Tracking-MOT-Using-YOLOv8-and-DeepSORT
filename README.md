@@ -121,6 +121,9 @@ projet_detection_suivi_pietons/
     ├── data_inria.yaml
     └── liste_chemin_image.sh
 
+
+```
+
 3. Datasets (liens officiels)
 Les datasets sont trop volumineux pour être versionnés.
 Ils doivent être téléchargés depuis les sites officiels puis placés dans datasets/.
