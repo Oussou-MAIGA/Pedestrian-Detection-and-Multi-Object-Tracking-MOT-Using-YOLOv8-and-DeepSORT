@@ -146,7 +146,7 @@ Site : https://www.kaggle.com/datasets/leducnhuan/kitti-tracking
 
 Dossier cible : datasets/kitti_tracking/
 
-Une fois les archives kitti_tracking extraites, vous obtenez la structure officielle, par exemple :
+Une fois par exemple les archives kitti_tracking extraites, vous obtenez la structure officielle suivante :
 
 ```text
 datasets/kitti_tracking/
@@ -223,9 +223,9 @@ Le fine-tuning sur Caltech produit le meilleur modèle du projet (celui utilisé
 modeles/caltech_person/weights/best.pt
 Ce modèle :
 
-- est entraîné sur Caltech (train/val),
+- est entraîné sur Caltech (train),
 
-- est évalué automatiquement sur Caltech (test) dans le script SLURM (yolo val split=test),
+- est évalué sur Caltech (test) dans le script SLURM (yolo val split=test),
 
 - est ensuite réutilisé pour l’évaluation Caltech → INRIA (cross-dataset),
 
@@ -268,9 +268,9 @@ Résultat principal (Caltech → INRIA) :
 
 mAP@50 ≈ 0.689
 
-F1 et PR détaillés dans l’article (courbes PR/F1 + matrice de confusion).
+F1 et PR détaillés dans l’article (courbes PR/F1 + matrice de confusion): **Etude Comparative des techniques de Detection et Suivi de Pietons**
 
-Dans le rapport, c’est ce cas Caltech → INRIA qui est considéré comme
+Dans cet article, c’est ce cas Caltech → INRIA qui est considéré comme
 meilleur scénario global (modèle entraîné sur un dataset plus difficile et testé sur un plus simple).
 
 # 10. Suivi multi-objets
@@ -354,12 +354,12 @@ runs/tracking/deepsort_0019/
  └── deepsort_0019.mp4 # vidéo finale
 ```
 
-Les vidéos finales visibles dans videos/DeepSort.mp4 sont construites
+Les vidéos finales visibles dans videos/deepsort.mp4 sont construites
 à partir de ces frames via images_to_videos.py ;
 
 python scripts/images_to_videos.py \
-  --input_dir runs/kitti_tracking_eval/bytetrack_0019/frames \
-  --output_path runs/kitti_tracking_eval/bytetrack_0019/bytetrack_0019.mp4 \
+  --input_dir runs/tracking/deepsort_0019/frames \
+  --output_path runs/tracking/deepsort_0019/videos/deepsort_0019.mp4 \
   --fps 10
 
 Paramètres :
@@ -368,9 +368,13 @@ Paramètres :
 	– fps : nombre d’images par seconde (10 car pas assez d'image pour kitti_tracking)
 
 ## 10.2 ByteTrack (Ultralytics)
-ByteTrack est directement intégré dans Ultralytics via yolo track.
 
-Commande d’exemple (séquence kitti_tracking 0019)
+ByteTrack est intégré dans Ultralytics via `yolo track`.  
+Dans notre workflow, comme pour DeepSORT, `yolo track` génère **des images annotées**  
+et **non pas directement une vidéo**.  
+La vidéo finale est construite ensuite avec `images_to_videos.py`.
+
+### 10.2.1 Générer les images ByteTrack
 
 yolo track \
   model="modeles/caltech_person/weights/best.pt" \
@@ -381,8 +385,8 @@ yolo track \
   save=True \
   save_txt=True \
   save_json=True \
-  project="runs/kitti_eval" \
-  name="bytetrack_0019"
+  project="runs/tracking" \
+  name="bytetrack_0019/frames"
 
 model= : modèle YOLOv8s fine-tuné sur Caltech
 
@@ -400,8 +404,11 @@ Sorties typiques :
 
 ```text
 
-runs/kitti_tracking_eval/bytetrack_0019/
- ├── bytetrack_0019.mp4        # vidéo annotée
+runs/tracking/bytetrack_0019
+ ├── frames/       
+ │    ├── 000000.png      # image annotée (bbox + ID)
+ │    ├── 000001.png
+ │    └── ...
  ├── labels/
  │    ├── 000000.txt           # cls cx cy w h track_id
  │    ├── 000001.txt
@@ -409,7 +416,28 @@ runs/kitti_tracking_eval/bytetrack_0019/
  └── predictions.json          # résultats pour évaluation MOT
 
 ```
-Ces fichiers peuvent ensuite être convertis et évalués avec :
+
+### 10.2.2 Construire la vidéo ByteTrack
+
+Comme pour DeepSORT, les frames générées sont converties en vidéo :
+
+python scripts/images_to_videos.py \
+  --input_dir runs/tracking/bytetrack_0019/frames \
+  --output_path runs/tracking/bytetrack_0019/videos/bytetrack_0019.mp4 \
+  --fps 10
+
+
+Paramètres :
+
+input_dir : dossier contenant les images annotées
+
+output_path : vidéo finale
+
+fps : 10 (adéquat pour KITTI car peu d'images)
+
+La vidéo obtenue est ensuite copiée dans : videos/ByteTrack.mp4
+
+Ces fichiers (labels) peuvent ensuite être convertis et évalués avec :
 
 scripts/convert_Pred_to_MOT.py
 
@@ -426,7 +454,7 @@ pour obtenir les métriques IDF1, MOTA, etc., comme dans l’article.
 - Convertir Caltech en images + YOLO (scripts convertir_vbb.py, extract_images.py, extract_annotations.py)
 
 - Générer les splits :
-   config/liste_chemin_image.sh
+   config/liste_chemin_image.sh  (mais sera gérer par le slurm ci-dessous donc ignorer cette étape)
 
 - Entraîner YOLOv8s sur Caltech :
 
