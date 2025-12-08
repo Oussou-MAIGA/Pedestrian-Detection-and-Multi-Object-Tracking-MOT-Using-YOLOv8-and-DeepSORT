@@ -39,8 +39,8 @@
 **Haar/SVM · HOG/SVM · YOLOv8s · DeepSORT (ReID MobileNet) · ByteTrack**
 
 Projet du cours — Université de Moncton  
-Auteur : **Ousmane Maiga**  
-Superviseur : **Pr. Moulay Akhloufi – PRIME Lab**
+Auteur : **Ousmane MAIGA**  
+Superviseur : **Pr. Moulay AKHLOUFI – PRIME Lab**
 
 ---
 
@@ -85,8 +85,8 @@ projet_detection_suivi_pietons/
 │   └── yolo_caltech_inria_2.jpg
 │
 ├── videos/                 # résultats de suivi (DeepSORT / ByteTrack)
-│   ├── DeepSort.mp4
-│   └── ByteTrack.mp4
+│   ├── [Voir la vidéo DeepSORT](https://bizoffice4827-my.sharepoint.com/:v:/g/personal/technicien_mrp92_fr/IQAaIrXX4PK9TIhSjS7_q021AbbQRkKVM1pONkk9cDbHsRI?e=itdp77)
+│   └── [Voir la vidéo Bytetrack](https://bizoffice4827-my.sharepoint.com/:v:/g/personal/technicien_mrp92_fr/IQBHNRAXR811TrvHZ0TlRg96AX2TmrvCqu6MQ3_LM9kQlb8?e=B9xTiL)
 │
 ├── modeles/
 │   └── caltech_person/
@@ -352,13 +352,24 @@ runs/tracking/deepsort_0019/
  │    ├── 000001.png
  │    └── ...
  └── labels/
-      ├── 000000.txt      # cls cx cy w h track_id
-      ├── 000001.txt
-      └── ...
+ │    ├── 000000.txt      # cls cx cy w h track_id
+ │    ├── 000001.txt
+ │    └── ...
+ └── deepsort_0019.mp4 # vidéo finale
 ```
 
 Les vidéos finales visibles dans videos/DeepSort.mp4 sont construites
-à partir de ces frames via images_to_videos.py.
+à partir de ces frames via images_to_videos.py ;
+
+python scripts/images_to_videos.py \
+  --input_dir runs/kitti_eval/bytetrack_0019/frames \
+  --output_path runs/kitti_eval/bytetrack_0019/bytetrack_0019.mp4 \
+  --fps 10
+
+Paramètres :
+	– input_dir : dossier contenant les images annotées
+	– output_path : nom de la vidéo générée
+	– fps : nombre d’images par seconde (10 car pas assez d'image pour KITTI)
 
 ## 10.2 ByteTrack (Ultralytics)
 ByteTrack est directement intégré dans Ultralytics via yolo track.
@@ -383,7 +394,7 @@ source= : dossier d’images KITTI pour une séquence
 
 tracker="bytetrack.yaml" : active ByteTrack
 
-save=True : enregistre la vidéo annotée (.mp4)
+save=True : enregistre automatiquement
 
 save_txt=True : enregistre les labels avec track_id
 
@@ -458,6 +469,6 @@ Le modèle unique utilisé dans tous les résultats de l’article est : modeles
 
 Pour toute question concernant le projet, vous pouvez contacter :
 
-**Ousmane Maiga**  
+**Ousmane MAIGA**  
 **eom6713@umoncton.ca**
 
