@@ -1,0 +1,48 @@
+Lancer yolo pour mAP50 0.515 sur train Caltech pour un modele entrainer avec Caltech et mAP50 0.483 sur test caltech pour un modele entrainer avec Caltech : 
+
+sbatch train_yolo.slurm
+
+Lancer yolo pour mAP50 0.946 sur Train Inria pour un modele entrainer avec Inria :
+
+yolo detect train \
+  model=/home/ousman/links/scratch/pieton_tm/modeles/yolov8/yolov8s.pt \
+  data=~/links/scratch/pieton_tm/INRIA_Pedestrian/data_caltech.yaml \
+  imgsz=640 batch=16 epochs=40 patience=15 \
+  workers=0 cache=False amp=False verbose=True \
+  project=/home/ousman/links/scratch/pieton_tm/sorties_detect/yolov8 \
+  name=inria_person
+
+Lancer yolo pour mAP50 0.933 sur test Inria pour un modele entrainer avec Inria :
+
+yolo detect val \
+  model=/home/ousman/links/scratch/pieton_tm/sorties_detect/yolov8/inria_person/weights/best.pt \
+  data="/home/ousman/links/scratch/pieton_tm/INRIA_Pedestrian/data_inria.yaml" \
+  imgsz=640 workers=8 batch=16 split=test save_txt=True save_conf=True \
+  project=/home/ousman/links/scratch/pieton_tm/sorties_detect/yolov8 name=inria_person_test
+
+Lancer la prédiciton sur test de Inria pour un modele entrainer avec Inria (mAP50 0.946 sur train Inria et mAP50 0.933 sur test Inria) :
+
+yolo detect predict \
+  model=/home/ousman/links/scratch/pieton_tm/sorties_detect/yolov8/inria_person/weights/best.pt \
+  source=/home/ousman/links/scratch/pieton_tm/INRIA_Pedestrian/test/images \
+  imgsz=640 conf=0.25 iou=0.6 save_txt=True save_conf=True \
+  project=/home/ousman/links/scratch/pieton_tm/sorties_detect/yolov8 name=inria_test_pred
+
+
+Faire le cross dataset caltech --->Inria. Caltech pour mAP50 0.689 sur test Inria pour un modele entrainer avec Caltech :
+
+yolo detect val   model=/home/ousman/links/scratch/pieton_tm/sorties_detect/yolov8/caltech_person/weights/best.pt   data=~/links/scratch/pieton_tm/INRIA_Pedestrian/data_inia.yaml  imgsz=640 batch=8 workers=8 batch=16 split=test cache=False verbose=True   name=caltech_inria_person_test
+
+
+Faire le cross dataset inria ---> caltech. Inria pour mAP50 0.157 sur test Caltech pour un modele entrainer avec Inria :
+
+yolo detect val   model=/home/ousman/links/scratch/pieton_tm/sorties_detect/yolov8/inria_person/weights/best.pt   data="/home/ousman/links/scratch/caltech_prepare/sorties/config/data_caltech.yaml"  imgsz=640 batch=8 workers=8 batch=16 split=test cache=False verbose=True   name=inria_caltech_person_test
+
+
+
+
+
+
+
+
+

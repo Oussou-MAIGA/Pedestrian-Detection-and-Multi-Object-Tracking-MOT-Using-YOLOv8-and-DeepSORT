@@ -38,7 +38,7 @@ bash "$CFG/liste_chemin_image.sh"
 echo "[INFO] Début entraînement YOLO (4 GPUs, 4 époques)…"
 yolo detect train \
   model="$MODEL" \
-  data="$CFG/data.yaml" \
+  data="$CFG/data_caltech.yaml" \
   imgsz=640 epochs=4 batch=16 device=0,1,2,3 workers=8 \
   cache=False amp=False verbose=True \
   project="$PROJECT_OUT" \
@@ -48,7 +48,7 @@ yolo detect train \
 echo "[INFO] Évaluation sur set06–set10…"
 yolo detect val \
   model="$BEST_PT" \
-  data="$CFG/data.yaml" \
+  data="$CFG/data_caltech.yaml" \
   split=test imgsz=640 batch=16 device=0,1,2,3 workers=8 \
   cache=False verbose=True \
   project="$PROJECT_OUT" \
