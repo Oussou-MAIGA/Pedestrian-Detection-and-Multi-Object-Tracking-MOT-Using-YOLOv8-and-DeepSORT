@@ -70,7 +70,7 @@ projet_detection_suivi_pietons/
     ├── data_caltech.yaml
     ├── data_inria.yaml
     └── liste_chemin_image.sh
-
+```
 ---
 
 # 3. Téléchargement des datasets (liens officiels)
