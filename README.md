@@ -31,6 +31,7 @@ Objectifs :
 
 # 2. Structure du projet 
 
+'''text
 projet_detection_suivi_pietons/
 │
 ├── README.md
@@ -42,8 +43,8 @@ projet_detection_suivi_pietons/
 │ ├── haar_inria_2.png
 │ ├── hog_inria_1.png
 │ ├── hog_inria_2.png
-│ ├── yolo_inria_1.jpg
-│ ├── yolo_inria_2.jpg
+│ ├── yolo_caltech_inria_1.jpg
+│ ├── yolo_caltech_inria_2.jpg
 │
 ├── videos/ 
 │ ├── DeepSort.mp4
@@ -74,14 +75,13 @@ projet_detection_suivi_pietons/
 ├── data_caltech.yaml
 ├── data_inria.yaml
 └── liste_chemin_image.sh
-
+'''
 
 ---
 
 # 3. Téléchargement des datasets (liens officiels)
 
-Les datasets **ne sont pas fournis dans le ZIP** (trop volumineux).  
-Télécharger depuis les liens officiels :
+Télécharger les datasets depuis les liens officiels car trop volumineux :
 
 ### 🔹 **Caltech Pedestrian Dataset**  
 https://www.vision.caltech.edu/Image_Datasets/CaltechPedestrians/
@@ -101,25 +101,33 @@ datasets/KITTI/
 
 ---
 
-# 4. Exemples de détection (version propre B — 420px)
+# 4. Exemples de détection 
 
-## Haar + SVM
-<img src="images/haar_caltech_1.png" width="420">
-<img src="images/haar_caltech_2.png" width="420">
-<img src="images/haar_inria_1.png" width="420">
-<img src="images/haar_inria_2.png" width="420">
+### Haar + SVM (Caltech & INRIA)
 
----
+<p align="center">
+  <img src="images/haar_caltech_1.png" width="330" />
+  <img src="images/haar_caltech_2.png" width="330" />
+</p>
 
-## HOG + SVM
-<img src="images/hog_inria_1.png" width="420">
-<img src="images/hog_inria_2.png" width="420">
+<p align="center">
+  <img src="images/haar_inria_1.png" width="330" />
+  <img src="images/haar_inria_2.png" width="330" />
+</p>
 
----
+### HOG + SVM (INRIA)
 
-## YOLOv8s (meilleur modèle : `caltech.pt`)
-<img src="images/yolo_inria_1.jpg" width="420">
-<img src="images/yolo_inria_2.jpg" width="420">
+<p align="center">
+  <img src="images/hog_inria_1.png" width="330" />
+  <img src="images/hog_inria_2.png" width="330" />
+</p>
+
+### YOLOv8s (INRIA)
+
+<p align="center">
+  <img src="images/yolo_inria_1.jpg" width="330" />
+  <img src="images/yolo_inria_2.jpg" width="330" />
+</p>
 
 ---
 
