@@ -1,6 +1,6 @@
 ---
 
-# 🛠 Technologies utilisées
+# Technologies utilisées
 
 <p align="left">
 
@@ -96,7 +96,7 @@ projet_detection_suivi_pietons/
 ├── datasets/               # à remplir via les liens officiels (Section 3)
 │   ├── Caltech/
 │   ├── INRIA/
-│   └── KITTI/
+│   └── kitti_tracking/
 │
 ├── scripts/
 │   ├── feature_haar_inria.py
@@ -129,7 +129,7 @@ Les datasets sont trop volumineux pour être versionnés.
 Ils doivent être téléchargés depuis les sites officiels puis placés dans datasets/.
 
 🔹 Caltech Pedestrian
-Site : https://www.vision.caltech.edu/Image_Datasets/CaltechPedestrians/
+Site : https://www.kaggle.com/datasets/kalvinquackenbush/caltechpedestriandataset
 
 Dossier cible : datasets/Caltech/
 
@@ -137,31 +137,30 @@ Les scripts convertir_vbb.py, extract_images.py, extract_annotations.py
 permettent de convertir .seq + .vbb → images + labels YOLO.
 
 🔹 INRIA Person
-Repo : https://github.com/olt/inria-object-detection
+Repo : https://www.kaggle.com/datasets/jcoral02/inriaperson
 
 Dossier cible : datasets/INRIA/
 
-🔹 KITTI Tracking 
-Site : https://www.cvlibs.net/datasets/kitti/eval_tracking.php
+🔹 kitti_tracking 
+Site : https://www.kaggle.com/datasets/leducnhuan/kitti-tracking
 
-Dossier cible : datasets/KITTI/
+Dossier cible : datasets/kitti_tracking/
 
-Une fois les archives KITTI extraites, vous obtenez la structure officielle, par exemple :
+Une fois les archives kitti_tracking extraites, vous obtenez la structure officielle, par exemple :
 
 ```text
-datasets/KITTI/
- └── tracking/
-     └── training/
-         └── image_02/
-             ├── 0000/
-             ├── 0001/
-             ├── 0012/
-             ├── 0019/
-             └── ...
+datasets/kitti_tracking/
+    └── training/
+        └── image_02/
+            ├── 0000/
+            ├── 0001/
+            ├── 0012/
+            ├── 0019/
+            └── ...
 ```
 
-L’idée est simplement de placer les images de tracking dans datasets/KITTI/...
-en respectant l’organisation native de KITTI.
+L’idée est simplement de placer les images de tracking dans datasets/kitti_tracking/...
+en respectant l’organisation native de kitti_tracking.
 
 # 4. Résultats de détection
 
@@ -280,28 +279,28 @@ meilleur scénario global (modèle entraîné sur un dataset plus difficile et t
 DeepSORT n’est pas intégré directement dans Ultralytics :
 on utilise le script Python track_ReID_deepsort.py, qui prend en entrée :
 
-les images KITTI pour une séquence (ex. 0019),
+les images kitti_tracking pour une séquence (ex. 0019),
 
 les détections YOLOv8s au format e (.txt) générées par Ultralytics,
 
 un dossier de sortie pour les frames annotées et les labels avec ID.
 
-### 10.1.1 Générer les détections YOLO sur KITTI
+### 10.1.1 Générer les détections YOLO sur kitti_tracking
 
 yolo detect predict \
   model=modeles/caltech_person/weights/best.pt \
-  source=datasets/KITTI/tracking/training/image_02/0019 \
+  source=datasets/kitti_tracking/training/image_02/0019 \
   imgsz=1408 \
   conf=0.60 \
   save=True \
   save_txt=True \
   project=runs/detect \
-  name=kitti_0019_yolo
+  name=kitti_tracking_0019_yolo
 
 Cela produit une structure de ce type :
 
 ```text
-runs/detect/kitti_0019_yolo/
+runs/detect/kitti_tracking_0019_yolo/
  ├── 000000.png
  ├── 000001.png
  ├── ...
@@ -316,8 +315,8 @@ runs/detect/kitti_0019_yolo/
 
 
 python scripts/track_ReID_deepsort.py \
-  --img_dir  datasets/KITTI/tracking/training/image_02/0019 \
-  --dets_dir runs/detect/kitti_0019_yolo/labels \
+  --img_dir  datasets/kitti_tracking/training/image_02/0019 \
+  --dets_dir runs/detect/kitti_tracking_0019_yolo/labels \
   --out_dir  runs/tracking/deepsort_0019 \
   --embedder mobilenet \
   --max_age 10 \
@@ -326,7 +325,7 @@ python scripts/track_ReID_deepsort.py \
 
 Paramètres principaux :
 
---img_dir : images KITTI d’une séquence (ex. 0019)
+--img_dir : images kitti_tracking d’une séquence (ex. 0019)
 
 --dets_dir : fichiers .txt YOLO générés par yolo detect predict
 
@@ -359,23 +358,23 @@ Les vidéos finales visibles dans videos/DeepSort.mp4 sont construites
 à partir de ces frames via images_to_videos.py ;
 
 python scripts/images_to_videos.py \
-  --input_dir runs/kitti_eval/bytetrack_0019/frames \
-  --output_path runs/kitti_eval/bytetrack_0019/bytetrack_0019.mp4 \
+  --input_dir runs/kitti_tracking_eval/bytetrack_0019/frames \
+  --output_path runs/kitti_tracking_eval/bytetrack_0019/bytetrack_0019.mp4 \
   --fps 10
 
 Paramètres :
 	– input_dir : dossier contenant les images annotées
 	– output_path : nom de la vidéo générée
-	– fps : nombre d’images par seconde (10 car pas assez d'image pour KITTI)
+	– fps : nombre d’images par seconde (10 car pas assez d'image pour kitti_tracking)
 
 ## 10.2 ByteTrack (Ultralytics)
 ByteTrack est directement intégré dans Ultralytics via yolo track.
 
-Commande d’exemple (séquence KITTI 0019)
+Commande d’exemple (séquence kitti_tracking 0019)
 
 yolo track \
   model="modeles/caltech_person/weights/best.pt" \
-  source="datasets/KITTI/tracking/training/image_02/0019" \
+  source="datasets/kitti_tracking/training/image_02/0019" \
   imgsz=1408 \
   conf=0.60 \
   tracker="bytetrack.yaml" \
@@ -387,7 +386,7 @@ yolo track \
 
 model= : modèle YOLOv8s fine-tuné sur Caltech
 
-source= : dossier d’images KITTI pour une séquence
+source= : dossier d’images kitti_tracking pour une séquence
 
 tracker="bytetrack.yaml" : active ByteTrack
 
@@ -401,7 +400,7 @@ Sorties typiques :
 
 ```text
 
-runs/kitti_eval/bytetrack_0019/
+runs/kitti_tracking_eval/bytetrack_0019/
  ├── bytetrack_0019.mp4        # vidéo annotée
  ├── labels/
  │    ├── 000000.txt           # cls cx cy w h track_id
@@ -444,7 +443,7 @@ pour obtenir les métriques IDF1, MOTA, etc., comme dans l’article.
    data=config/data_inria.yaml \
    split=test
 
-- Générer les détections KITTI (pour le tracking) avec yolo detect predict.
+- Générer les détections kitti_tracking (pour le tracking) avec yolo detect predict.
 
 - Lancer DeepSORT avec track_ReID_deepsort.py.
 
@@ -458,7 +457,7 @@ Le modèle unique utilisé dans tous les résultats de l’article est : modeles
 
 - testé en cross-dataset Caltech → INRIA (meilleure configuration)
 
-- utilisé pour DeepSORT et ByteTrack sur KITTI.
+- utilisé pour DeepSORT et ByteTrack sur kitti_tracking.
 
 ---
 
