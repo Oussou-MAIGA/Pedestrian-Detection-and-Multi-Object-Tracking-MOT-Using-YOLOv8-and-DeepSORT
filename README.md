@@ -38,6 +38,8 @@ et de l’impact du détecteur sur la stabilité du suivi.
 
 ## 2. TL;DR — Exécuter le projet en quelques secondes
 
+Voici les commandes essentielles pour exécuter le projet immédiatement :
+
 git clone https://github.com/Oussou-MAIGA/Pedestrian-Detection-and-Multi-Object-Tracking-MOT-Using-YOLOv8-and-DeepSORT.git  
 cd Pedestrian-Detection-and-Multi-Object-Tracking-MOT-Using-YOLOv8-and-DeepSORT
 
