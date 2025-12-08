@@ -29,53 +29,47 @@ Objectifs :
 
 ---
 
-# 2. Structure du projet 
+## 2. Structure du projet
 
-'''text
+```text
 projet_detection_suivi_pietons/
-│
 ├── README.md
-│
-├── images/ 
-│ ├── haar_caltech_1.png
-│ ├── haar_caltech_2.png
-│ ├── haar_inria_1.png
-│ ├── haar_inria_2.png
-│ ├── hog_inria_1.png
-│ ├── hog_inria_2.png
-│ ├── yolo_caltech_inria_1.jpg
-│ ├── yolo_caltech_inria_2.jpg
-│
-├── videos/ 
-│ ├── DeepSort.mp4
-│ └── ByteTrack.mp4
-│
+├── train_yolo.slurm
+├── images/
+│   ├── haar_caltech_1.png
+│   ├── haar_caltech_2.png
+│   ├── haar_inria_1.png
+│   ├── haar_inria_2.png
+│   ├── hog_inria_1.png
+│   ├── hog_inria_2.png
+│   ├── yolo_inria_1.jpg
+│   └── yolo_inria_2.jpg
+├── videos/
+│   ├── DeepSort.mp4
+│   └── ByteTrack.mp4
 ├── models/
-│ └── caltech.pt ← MEILLEUR modèle (YOLOv8s entraîné sur Caltech)
-│
+│   └── caltech.pt       ← meilleur modèle YOLOv8s (entraîné sur Caltech)
 ├── scripts/
-│ ├── feature_haar_inria.py
-│ ├── features_hog_inria.py
-│ ├── patch_and_negatifs_inria.py
-│ ├── entrainement_svm_inria.py
-│ ├── entrainement_svm_hog_inria.py
-│ ├── detect_inria_svm.py
-│ ├── detect_inria_hog_svm.py
-│ ├── track_ReID_deepsort.py
-│ ├── eval_MOT.py
-│ ├── convert_pred_to_MOT.py
-│ ├── convert_kitti_GT_to_MOT.py
-│ ├── convertir_vbb.py
-│ ├── extract_images.py
-│ ├── extract_annotations.py
-│ ├── video_to_frames.py
-│ └── images_to_videos.py
-│
+│   ├── feature_haar_inria.py
+│   ├── features_hog_inria.py
+│   ├── patch_and_negatifs_inria.py
+│   ├── entrainement_svm_inria.py
+│   ├── entrainement_svm_hog_inria.py
+│   ├── detect_inria_svm.py
+│   ├── detect_inria_hog_svm.py
+│   ├── track_ReID_deepsort.py
+│   ├── eval_MOT.py
+│   ├── convert_pred_to_MOT.py
+│   ├── convert_kitti_GT_to_MOT.py
+│   ├── extract_images.py
+│   ├── extract_annotations.py
+│   ├── convertir_vbb.py
+│   ├── video_to_frames.py
+│   └── images_to_videos.py
 └── config/
-├── data_caltech.yaml
-├── data_inria.yaml
-└── liste_chemin_image.sh
-'''
+    ├── data_caltech.yaml
+    ├── data_inria.yaml
+    └── liste_chemin_image.sh
 
 ---
 
@@ -107,26 +101,26 @@ datasets/KITTI/
 
 <p align="center">
   <img src="images/haar_caltech_1.png" width="260" />
-  <img src="images/haar_caltech_2.png" width="2600" />
+  <img src="images/haar_caltech_2.png" width="260" />
 </p>
 
 <p align="center">
-  <img src="images/haar_inria_1.png" width="330" />
-  <img src="images/haar_inria_2.png" width="330" />
+  <img src="images/haar_inria_1.png" width="260" />
+  <img src="images/haar_inria_2.png" width="260" />
 </p>
 
 ### HOG + SVM (INRIA)
 
 <p align="center">
-  <img src="images/hog_inria_1.png" width="330" />
-  <img src="images/hog_inria_2.png" width="330" />
+  <img src="images/hog_inria_1.png" width="260" />
+  <img src="images/hog_inria_2.png" width="260" />
 </p>
 
 ### YOLOv8s (INRIA)
 
 <p align="center">
-  <img src="images/yolo_inria_1.jpg" width="330" />
-  <img src="images/yolo_inria_2.jpg" width="330" />
+  <img src="images/yolo_inria_1.jpg" width="260" />
+  <img src="images/yolo_inria_2.jpg" width="260" />
 </p>
 
 ---
@@ -140,11 +134,11 @@ videos/ByteTrack.mp4
 
 ## DeepSORT  
 `videos/DeepSort.mp4`  
-<img src="images/yolo_inria_1.jpg" width="420">
+<img src="images/yolo_inria_1.jpg" width="260">
 
 ## ByteTrack  
 `videos/ByteTrack.mp4`  
-<img src="images/yolo_inria_2.jpg" width="420">
+<img src="images/yolo_inria_2.jpg" width="260">
 
 ---
 
