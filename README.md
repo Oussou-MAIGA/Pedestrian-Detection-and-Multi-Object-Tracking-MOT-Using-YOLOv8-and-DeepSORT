@@ -106,8 +106,8 @@ datasets/KITTI/
 ### Haar + SVM (Caltech & INRIA)
 
 <p align="center">
-  <img src="images/haar_caltech_1.png" width="330" />
-  <img src="images/haar_caltech_2.png" width="330" />
+  <img src="images/haar_caltech_1.png" width="260" />
+  <img src="images/haar_caltech_2.png" width="2600" />
 </p>
 
 <p align="center">
