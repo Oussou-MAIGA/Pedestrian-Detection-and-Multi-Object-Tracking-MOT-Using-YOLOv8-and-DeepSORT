@@ -1,7 +1,9 @@
-# TL;DR — Exécuter le projet en 30 secondes
+# TL;DR — Exécuter le projet en quelques temps
 
 git clone [<URL_DU_REPO>](https://github.com/Oussou-MAIGA/Pedestrian-Detection-and-Multi-Object-Tracking-MOT-Using-YOLOv8-and-DeepSORT.git)
-cd projet_detection_suivi_pietons
+
+cd Pedestrian-Detection-and-Multi-Object-Tracking-MOT-Using-YOLOv8-and-DeepSORT
+
 
 # Installer les dépendances (pour installation locale)
 pip install -r requirements.txt
@@ -100,6 +102,7 @@ projet_detection_suivi_pietons/
 │
 ├── README.md
 ├── train_yolo.slurm
+├── requirements.txt
 │
 ├── images/                 # résultats de détection pour le rapport / README
 │   ├── haar_caltech_1.png
