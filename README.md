@@ -66,10 +66,11 @@ projet_detection_suivi_pietons/
 │   ├── convertir_vbb.py
 │   ├── video_to_frames.py
 │   └── images_to_videos.py
-└── config/
-    ├── data_caltech.yaml
-    ├── data_inria.yaml
-    └── liste_chemin_image.sh
+│── config/
+│   ├── data_caltech.yaml
+│   ├── data_inria.yaml
+│   └── liste_chemin_image.sh
+└── README_logs
 ```
 ---
 
@@ -119,8 +120,8 @@ datasets/KITTI/
 ### YOLOv8s (INRIA)
 
 <p align="center">
-  <img src="images/yolo_inria_1.jpg" width="260" />
-  <img src="images/yolo_inria_2.jpg" width="260" />
+  <img src="images/yolo_caltech_inria_1.jpg" width="260" />
+  <img src="images/yolo_caltech_inria_2.jpg" width="260" />
 </p>
 
 ---
