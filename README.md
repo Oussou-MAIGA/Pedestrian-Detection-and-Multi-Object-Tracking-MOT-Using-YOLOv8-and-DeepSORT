@@ -36,7 +36,7 @@ et de l’impact du détecteur sur la stabilité du suivi.
 
 ---
 
-## 2. TL;DR — Exécuter le projet en quelques secondes
+## 2. TL;DR 
 
 Voici les commandes essentielles pour exécuter le projet immédiatement :
 
