@@ -23,7 +23,7 @@ from joblib import load
 import pywt
 
 def make_thumbnail(canvas_w, canvas_h, img):
-    """Retourne l'image ajustée dans une tuile canvas_w×canvas_h, centrée, avec bords blancs."""
+    
     w, h = img.size
     ratio = min(canvas_w / float(w), canvas_h / float(h))
     nw = max(1, int(w * ratio))

@@ -134,7 +134,7 @@ if __name__ == "__main__":
 # Validation (laisser score=-1 pour balayage des seuils) :
 # python ~/links/scratch/pieton_tm/scripts/detect_inria_hog_svm.py --images_dir /home/ousman/links/scratch/pieton_tm/INRIA_Pedestrian/valid/images  --model_path /home/ousman/links/scratch/pieton_tm/modeles/svm/svm_hog_64x128_inria.joblib  --out_dir    /home/ousman/links/scratch/pieton_tm/sorties_detect/hog/inria_val/val_detect  --scales 0.3  --stride 6 --nms_iou 0.2 --score_min 0.1 --draw --display_prob
 #
-# Ensuite évaluer (mAP50, F1_opt) avec ton eval_inria_svm.py existant :
+# Ensuite évaluer (mAP50, F1_opt) avec  eval_inria_svm.py existant :
 # python eval_inria_svm.py \#   --detections_dir /home/ousman/links/scratch/pieton_tm/sorties_detect/svm/hog_inria_val_detect \#   --labels_dir     /home/ousman/links/scratch/pieton_tm/INRIA_Pedestrian/valid/labels \#   --images_dir     /home/ousman/links/scratch/pieton_tm/INRIA_Pedestrian/valid/images \#   --out_dir        /home/ousman/links/scratch/pieton_tm/sorties_detect/svm_eval/hog_inria_val \#   --iou_thr        0.5
 #
 # Test final (réutiliser le seuil F1-opt trouvé sur Val, ex: 2.18) :

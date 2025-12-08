@@ -149,7 +149,7 @@ def write_via_csv_per_video(video_name: str, set_name: str, data: Dict[str, Any]
         writer.writeheader()
 
         for fid, objs in data["frames"].items():
-            # fid est une string si vient du JSON, int ici : on force int
+            
             fid_int = int(fid)
             fname = f"{set_name}_{video_name}_{fid_int:06d}.jpg"
             for rid, o in enumerate(objs):
