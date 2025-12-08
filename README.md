@@ -46,6 +46,11 @@ Superviseur : **Pr. Moulay AKHLOUFI – PRIME Lab**
 
 # 1. Description du projet
 
+<p align="center">
+  <img src="images/pipeline_detection_tracking.png" width="750">
+</p>
+
+
 Ce projet compare trois approches de **détection de piétons** :
 
 - Haar + SVM  
