@@ -85,8 +85,8 @@ projet_detection_suivi_pietons/
 │   └── yolo_caltech_inria_2.jpg
 │
 ├── videos/                 # résultats de suivi (DeepSORT / ByteTrack)
-│   ├── [Voir la vidéo DeepSORT](https://bizoffice4827-my.sharepoint.com/:v:/g/personal/technicien_mrp92_fr/IQAaIrXX4PK9TIhSjS7_q021AbbQRkKVM1pONkk9cDbHsRI?e=itdp77)
-│   └── [Voir la vidéo Bytetrack](https://bizoffice4827-my.sharepoint.com/:v:/g/personal/technicien_mrp92_fr/IQBHNRAXR811TrvHZ0TlRg96AX2TmrvCqu6MQ3_LM9kQlb8?e=B9xTiL)
+│   ├── DeepSort.mp4
+│   └── ByteTrack.mp4
 │
 ├── modeles/
 │   └── caltech_person/
@@ -175,15 +175,9 @@ YOLOv8s (modèle entraîné sur Caltech, testé sur INRIA)
 # 5. Résultats de suivi
 Les vidéos finales de suivi sont dans :
 
-videos/DeepSort.mp4
+[Voir la vidéo DeepSORT](https://bizoffice4827-my.sharepoint.com/:v:/g/personal/technicien_mrp92_fr/IQAaIrXX4PK9TIhSjS7_q021AbbQRkKVM1pONkk9cDbHsRI?e=itdp77)
+[Voir la vidéo Bytetrack](https://bizoffice4827-my.sharepoint.com/:v:/g/personal/technicien_mrp92_fr/IQBHNRAXR811TrvHZ0TlRg96AX2TmrvCqu6MQ3_LM9kQlb8?e=B9xTiL)
 
-videos/ByteTrack.mp4
-
-DeepSORT
-Voir la vidéo DeepSORT
-
-ByteTrack
-Voir la vidéo ByteTrack
 
 # 6. Environnement logiciel (Cluster Trilium)
 Sur le cluster Trilium, avant d’exécuter l’entraînement ou les évaluations YOLO,
