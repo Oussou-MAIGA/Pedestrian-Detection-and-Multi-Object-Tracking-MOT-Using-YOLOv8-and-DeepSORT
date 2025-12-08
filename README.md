@@ -148,6 +148,7 @@ Dossier cible : datasets/KITTI/
 
 Une fois les archives KITTI extraites, vous obtenez la structure officielle, par exemple :
 
+```text
 datasets/KITTI/
  └── tracking/
      └── training/
@@ -157,15 +158,16 @@ datasets/KITTI/
              ├── 0012/
              ├── 0019/
              └── ...
+```
 
 L’idée est simplement de placer les images de tracking dans datasets/KITTI/...
 en respectant l’organisation native de KITTI.
 
 # 4. Résultats de détection
 
-Haar + SVM (Caltech / INRIA)
+Haar + SVM (Caltech - Caltech/ INRIA - INRIA)
 <p align="center"> <img src="images/haar_caltech_1.png" width="260"/> <img src="images/haar_caltech_2.png" width="260"/> </p> <p align="center"> <img src="images/haar_inria_1.png" width="260"/> <img src="images/haar_inria_2.png" width="260"/> </p>
-HOG + SVM (INRIA)
+HOG + SVM (INRIA - INRIA)
 <p align="center"> <img src="images/hog_inria_1.png" width="260"/> <img src="images/hog_inria_2.png" width="260"/> </p>
 YOLOv8s (modèle entraîné sur Caltech, testé sur INRIA)
 <p align="center"> <img src="images/yolo_caltech_inria_1.jpg" width="260"/> <img src="images/yolo_caltech_inria_2.jpg" width="260"/> </p>
@@ -225,18 +227,17 @@ Le fine-tuning sur Caltech produit le meilleur modèle du projet (celui utilisé
 modeles/caltech_person/weights/best.pt
 Ce modèle :
 
-est entraîné sur Caltech (train/val),
+- est entraîné sur Caltech (train/val),
 
-est évalué automatiquement sur Caltech (test) dans le script SLURM (yolo val split=test),
+- est évalué automatiquement sur Caltech (test) dans le script SLURM (yolo val split=test),
 
-est ensuite réutilisé pour l’évaluation Caltech → INRIA (cross-dataset),
+- est ensuite réutilisé pour l’évaluation Caltech → INRIA (cross-dataset),
 
-sert de modèle unique pour tous les tests et pour les deux trackers (DeepSORT et ByteTrack).
+- sert de modèle unique pour tous les tests et pour les deux trackers (DeepSORT et ByteTrack).
 
 # 8. Entraînement YOLOv8s sur Caltech
-L’entraînement se fait via le script SLURM :
+L’entraînement se fait via le script SLURM : sbatch train_yolo.slurm
 
-sbatch train_yolo.slurm
 Dans ce script :
 
 model=$MODEL pointe vers yolov8s.pt (modèle de base COCO),
@@ -245,7 +246,7 @@ data=config/data_caltech.yaml décrit les chemins du dataset Caltech converti en
 
 les paramètres par défaut (batch, epochs, etc.) sont ajustés pour le cluster.
 
-À la fin de l’entraînement, Ultralytics valide automatiquement sur le split test de Caltech :
+À la fin de l’entraînement, on valide  sur le split test de Caltech pour les performances officielles:
 
 yolo detect val \
   model=modeles/caltech_person/weights/best.pt \
@@ -302,6 +303,7 @@ yolo detect predict \
 
 Cela produit une structure de ce type :
 
+```text
 runs/detect/kitti_0019_yolo/
  ├── 000000.png
  ├── 000001.png
@@ -310,6 +312,9 @@ runs/detect/kitti_0019_yolo/
       ├── 000000.txt    # cls cx cy w h conf
       ├── 000001.txt
       └── ...
+
+```
+
 ### 10.1.2 Lancer DeepSORT
 
 
@@ -340,6 +345,7 @@ Paramètres principaux :
 
 Résultats :
 
+```text
 runs/tracking/deepsort_0019/
  ├── frames/
  │    ├── 000000.png      # image annotée (bbox + ID)
@@ -349,6 +355,8 @@ runs/tracking/deepsort_0019/
       ├── 000000.txt      # cls cx cy w h track_id
       ├── 000001.txt
       └── ...
+```
+
 Les vidéos finales visibles dans videos/DeepSort.mp4 sont construites
 à partir de ces frames via images_to_videos.py.
 
@@ -383,6 +391,8 @@ save_json=True : exporte les résultats en JSON (format MOT-compatible)
 
 Sorties typiques :
 
+```text
+
 runs/kitti_eval/bytetrack_0019/
  ├── bytetrack_0019.mp4        # vidéo annotée
  ├── labels/
@@ -391,6 +401,7 @@ runs/kitti_eval/bytetrack_0019/
  │    └── ...
  └── predictions.json          # résultats pour évaluation MOT
 
+```
 Ces fichiers peuvent ensuite être convertis et évalués avec :
 
 scripts/convert_Pred_to_MOT.py
@@ -400,49 +411,47 @@ scripts/eval_MOT.py
 pour obtenir les métriques IDF1, MOTA, etc., comme dans l’article.
 
 # 11. Reproductibilité (résumé)
-Charger l’environnement Trilium (Section 6)
 
-Télécharger et placer les datasets (Section 3)
+- Charger l’environnement Trilium (Section 6)
 
-Convertir Caltech en images + YOLO (scripts convertir_vbb.py, extract_images.py, extract_annotations.py)
+- Télécharger et placer les datasets (Section 3)
 
-Générer les splits :
+- Convertir Caltech en images + YOLO (scripts convertir_vbb.py, extract_images.py, extract_annotations.py)
 
- config/liste_chemin_image.sh
+- Générer les splits :
+   config/liste_chemin_image.sh
 
-Entraîner YOLOv8s sur Caltech :
+- Entraîner YOLOv8s sur Caltech :
 
-sbatch train_yolo.slurm
+- sbatch train_yolo.slurm
+- dos2unix train_yolo.slurm
 
-→ modèle : modeles/caltech_person/weights/best.pt
-→ validation automatique Caltech → Caltech (yolo val split=test)
+ → modèle : modeles/caltech_person/weights/best.pt
+ → validation automatique Caltech → Caltech (yolo val split=test)
 
-Évaluer Caltech → INRIA :
+- Évaluer Caltech → INRIA :
 
-yolo detect val \
-  model=modeles/caltech_person/weights/best.pt \
-  data=config/data_inria.yaml \
-  split=test
+ yolo detect val \
+   model=modeles/caltech_person/weights/best.pt \
+   data=config/data_inria.yaml \
+   split=test
 
-Générer les détections KITTI (pour le tracking) avec yolo detect predict.
+- Générer les détections KITTI (pour le tracking) avec yolo detect predict.
 
-Lancer DeepSORT avec track_ReID_deepsort.py.
+- Lancer DeepSORT avec track_ReID_deepsort.py.
 
-Lancer ByteTrack avec yolo track ... tracker="bytetrack.yaml".
+- Lancer ByteTrack avec yolo track ... tracker="bytetrack.yaml".
 
 # 12. Modèle final du projet
-Le modèle unique utilisé dans tous les résultats de l’article est :
+Le modèle unique utilisé dans tous les résultats de l’article est : modeles/caltech_person/weights/best.pt
+- entraîné sur Caltech
 
-modeles/caltech_person/weights/best.pt
-entraîné sur Caltech
+- évalué sur Caltech (officiel) via yolo val split=test
 
-évalué sur Caltech (officiel) via yolo val split=test
+- testé en cross-dataset Caltech → INRIA (meilleure configuration)
 
-testé en cross-dataset Caltech → INRIA (meilleure configuration)
+- utilisé pour DeepSORT et ByteTrack sur KITTI.
 
-utilisé pour DeepSORT et ByteTrack sur KITTI.
-
-::contentReference[oaicite:0]{index=0}
 ---
 
 # Contact
