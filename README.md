@@ -98,7 +98,7 @@ datasets/KITTI/
 
 # 4. Exemples de détection 
 
-### Haar + SVM (Caltech & INRIA)
+### Haar + SVM (Caltech - Caltech & INRIA - INRIA)
 
 <p align="center">
   <img src="images/haar_caltech_1.png" width="260" />
@@ -110,14 +110,14 @@ datasets/KITTI/
   <img src="images/haar_inria_2.png" width="260" />
 </p>
 
-### HOG + SVM (INRIA)
+### HOG + SVM (INRIA - INRIA)
 
 <p align="center">
   <img src="images/hog_inria_1.png" width="260" />
   <img src="images/hog_inria_2.png" width="260" />
 </p>
 
-### YOLOv8s (INRIA)
+### YOLOv8s (Caltech - INRIA)
 
 <p align="center">
   <img src="images/yolo_caltech_inria_1.jpg" width="260" />
@@ -129,30 +129,30 @@ datasets/KITTI/
 # 5. Résultats de suivi 
 
 Les vidéos sont dans :  
-videos/DeepSort.mp4
+videos/DeepSort.mp4 et
 videos/ByteTrack.mp4
 
 
-## DeepSORT  
-`videos/DeepSort.mp4`  
-<img src="images/yolo_inria_1.jpg" width="260">
+### DeepSORT
 
-## ByteTrack  
-`videos/ByteTrack.mp4`  
-<img src="images/yolo_inria_2.jpg" width="260">
+[Voir la vidéo DeepSORT](videos/DeepSort.mp4)
+
+### ByteTrack
+
+[Voir la vidéo ByteTrack](videos/ByteTrack.mp4)
 
 ---
 
 # 6. Entraînement YOLOv8s (Caltech)
 
 ### SLURM (Cluster Trilium)
-sbatch train_yolo.slurm
+sbatch projet_detection_suivi_pietons/train_yolo.slurm
 
 
 ### Informations d’exécution  
 - GPU : 4  
 - Temps total : **2 h 05 min 41 s**  
-- Modèle obtenu → **models/caltech.pt**
+- Modèle obtenu → **modeles/yolov8s/caltech_person/weights/best.pt**
 
 ---
 
