@@ -1,64 +1,3 @@
-# TL;DR — Exécuter le projet en quelques temps
-
-git clone [<URL_DU_REPO>](https://github.com/Oussou-MAIGA/Pedestrian-Detection-and-Multi-Object-Tracking-MOT-Using-YOLOv8-and-DeepSORT.git)
-
-cd Pedestrian-Detection-and-Multi-Object-Tracking-MOT-Using-YOLOv8-and-DeepSORT
-
-
-# Installer les dépendances (pour installation locale)
-pip install -r requirements.txt
-
-# Télécharger les datasets (Section 3)
-# puis entraîner YOLO :
-yolo detect train model=yolov8s.pt data=config/data_caltech.yaml
-
-# Évaluer Caltech → INRIA :
-yolo detect val model=modeles/caltech_person/weights/best.pt data=config/data_inria.yaml
-
-# Lancer DeepSORT :
-python scripts/track_ReID_deepsort.py --img_dir ... --dets_dir ...
-
-# Lancer ByteTrack :
-yolo track model=modeles/caltech_person/weights/best.pt tracker=bytetrack.yaml source=...
-
-
----
-
-# Technologies utilisées
-
-<p align="left">
-
-  <!-- Python -->
-  <img src="https://img.shields.io/badge/Python-3.11-blue?logo=python" height="28"/>
-
-  <!-- Ultralytics -->
-  <img src="https://img.shields.io/badge/Ultralytics-YOLOv8-brightgreen?logo=ultralytics" height="28"/>
-
-  <!-- OpenCV -->
-  <img src="https://img.shields.io/badge/OpenCV-4.x-red?logo=opencv" height="28"/>
-
-  <!-- Scikit-learn -->
-  <img src="https://img.shields.io/badge/Scikit--Learn-SVM-orange?logo=scikitlearn" height="28"/>
-
-  <!-- PyWavelets -->
-  <img src="https://img.shields.io/badge/PyWavelets-Filtering-yellow" height="28"/>
-
-  <!-- DeepSORT -->
-  <img src="https://img.shields.io/badge/DeepSORT-ReID%20MobileNet-purple" height="28"/>
-
-  <!-- ByteTrack -->
-  <img src="https://img.shields.io/badge/ByteTrack-MOT-blueviolet" height="28"/>
-
-  <!-- SLURM -->
-  <img src="https://img.shields.io/badge/SLURM-HPC%20Cluster-green?logo=linux" height="28"/>
-
-  <!-- GPU -->
-  <img src="https://img.shields.io/badge/NVIDIA-H100%20GPU-76B900?logo=nvidia&logoColor=white" height="28"/>
-
-</p>
-
----
-
 # Détection et Suivi de Piétons  
 **Haar/SVM · HOG/SVM · YOLOv8s · DeepSORT (ReID MobileNet) · ByteTrack**
 
@@ -68,34 +7,58 @@ Superviseur : **Pr. Moulay AKHLOUFI – PRIME Lab**
 
 ---
 
-# 1. Description du projet
+## Technologies utilisées
+
+<p align="left">
+  <img src="https://img.shields.io/badge/Python-3.11-blue?logo=python" height="28"/>
+  <img src="https://img.shields.io/badge/Ultralytics-YOLOv8-brightgreen?logo=ultralytics" height="28"/>
+  <img src="https://img.shields.io/badge/OpenCV-4.x-red?logo=opencv" height="28"/>
+  <img src="https://img.shields.io/badge/Scikit--Learn-SVM-orange?logo=scikitlearn" height="28"/>
+  <img src="https://img.shields.io/badge/PyWavelets-Filtering-yellow" height="28"/>
+  <img src="https://img.shields.io/badge/DeepSORT-ReID%20MobileNet-purple" height="28"/>
+  <img src="https://img.shields.io/badge/ByteTrack-MOT-blueviolet" height="28"/>
+  <img src="https://img.shields.io/badge/SLURM-HPC%20Cluster-green?logo=linux" height="28"/>
+  <img src="https://img.shields.io/badge/NVIDIA-H100%20GPU-76B900?logo=nvidia&logoColor=white" height="28"/>
+</p>
+
+---
+
+## 1. Vue globale du système
 
 <p align="center">
   <img src="images/pipeline_detection_tracking.png" width="750">
 </p>
 
-
-Ce projet compare trois approches de **détection de piétons** :
-
-- Haar + SVM  
-- HOG + SVM  
-- YOLOv8s (meilleur modèle)
-
-et deux méthodes de **suivi multi-objets** :
-
-- DeepSORT (avec ReID MobileNet)  
-- ByteTrack (implémentation Ultralytics)
-
-Objectifs :
-
-- analyser pourquoi les détecteurs classiques échouent en scène réelle  
-- étudier la généralisation cross-dataset (**Caltech → INRIA**)  
-- mesurer l’impact de la qualité des détections sur le tracking  
-- produire des résultats visuels et deux vidéos finales de suivi
+Ce projet compare trois approches de **détection de piétons** (Haar+SVM, HOG+SVM, YOLOv8s)  
+et deux approches de **suivi multi-objets** (DeepSORT, ByteTrack),  
+avec une analyse complète de la **généralisation cross-dataset (Caltech → INRIA)**  
+et de l’impact du détecteur sur la stabilité du suivi.
 
 ---
 
-# 2. Structure du projet
+## 2. TL;DR — Exécuter le projet en quelques secondes
+
+git clone https://github.com/Oussou-MAIGA/Pedestrian-Detection-and-Multi-Object-Tracking-MOT-Using-YOLOv8-and-DeepSORT.git  
+cd Pedestrian-Detection-and-Multi-Object-Tracking-MOT-Using-YOLOv8-and-DeepSORT
+
+pip install -r requirements.txt
+
+# Entraîner YOLO :
+yolo detect train model=yolov8s.pt data=config/data_caltech.yaml
+
+# Tester Caltech → INRIA :
+yolo detect val model=modeles/caltech_person/weights/best.pt data=config/data_inria.yaml
+
+# Lancer DeepSORT :
+python scripts/track_ReID_deepsort.py --img_dir ... --dets_dir ...
+
+# Lancer ByteTrack :
+yolo track model=modeles/caltech_person/weights/best.pt tracker=bytetrack.yaml source=...
+
+---
+
+## 3. Structure du projet
+
 
 ```text
 projet_detection_suivi_pietons/
@@ -154,7 +117,7 @@ projet_detection_suivi_pietons/
 
 ```
 
-# 3. Datasets (liens officiels)
+## 4. Datasets (liens officiels)
 Les datasets sont trop volumineux pour être versionnés.
 Ils doivent être téléchargés depuis les sites officiels puis placés dans datasets/.
 
@@ -192,26 +155,7 @@ datasets/kitti_tracking/
 L’idée est simplement de placer les images de tracking dans datasets/kitti_tracking/...
 en respectant l’organisation native de kitti_tracking.
 
-# 4. Résultats de détection
-
-Haar + SVM (Caltech - Caltech/ INRIA - INRIA)
-<p align="center"> <img src="images/haar_caltech_1.png" width="260"/> <img src="images/haar_caltech_2.png" width="260"/> </p> <p align="center"> <img src="images/haar_inria_1.png" width="260"/> <img src="images/haar_inria_2.png" width="260"/> </p>
-HOG + SVM (INRIA - INRIA)
-<p align="center"> <img src="images/hog_inria_1.png" width="260"/> <img src="images/hog_inria_2.png" width="260"/> </p>
-YOLOv8s (modèle entraîné sur Caltech, testé sur INRIA)
-<p align="center"> <img src="images/yolo_caltech_inria_1.jpg" width="260"/> <img src="images/yolo_caltech_inria_2.jpg" width="260"/> </p>
-
-# 5. Résultats de suivi
-Les vidéos finales de suivi sont dans :
-
-[Voir la vidéo Bytetrack](https://bizoffice4827-my.sharepoint.com/:v:/g/personal/technicien_mrp92_fr/IQAaIrXX4PK9TIhSjS7_q021AbbQRkKVM1pONkk9cDbHsRI?e=ok9DhC)
-
-ou
-
-[Voir la vidéo DeepSort](https://bizoffice4827-my.sharepoint.com/:v:/g/personal/technicien_mrp92_fr/IQBHNRAXR811TrvHZ0TlRg96AX2TmrvCqu6MQ3_LM9kQlb8?e=KR0Vzy)
-
-
-# 6. Environnement logiciel (Cluster Trilium)
+## 5. Environnement logiciel (Cluster Trilium)
 Sur le cluster Trilium, avant d’exécuter l’entraînement ou les évaluations YOLO,
 les modules et bibliothèques suivants sont chargés / installés :
 
@@ -236,8 +180,8 @@ yolo detect predict ...
 
 yolo track ...
 
-# 7. Modèle YOLOv8s (base + fine-tuning)
-## 7.1 Modèle de base (pré-entraîné COCO)
+## 6. Modèle YOLOv8s (base + fine-tuning)
+### 6.1 Modèle de base (pré-entraîné COCO)
 Fichier : yolov8s.pt
 
 Téléchargement officiel :
@@ -247,7 +191,7 @@ Ce modèle est utilisé dans train_yolo.slurm comme point de départ :
 
 MODEL="yolov8s.pt"
 
-## 7.2 Modèle final (fine-tuné sur Caltech)
+### 6.2 Modèle final (fine-tuné sur Caltech)
 Le fine-tuning sur Caltech produit le meilleur modèle du projet (celui utilisé dans l’article) :
 
 modeles/caltech_person/weights/best.pt
@@ -261,7 +205,7 @@ Ce modèle :
 
 - sert de modèle unique pour tous les tests et pour les deux trackers (DeepSORT et ByteTrack).
 
-# 8. Entraînement YOLOv8s sur Caltech
+## 7. Entraînement YOLOv8s sur Caltech
 L’entraînement se fait via le script SLURM : sbatch train_yolo.slurm
 
 Dans ce script :
@@ -286,7 +230,7 @@ Temps d’exécution observé sur Trilium :
 
 ~ 2 h 05 min 41 s sur 4 GPUs (H100).
 
-# 9. Évaluation YOLOv8s (cross-dataset Caltech → INRIA)
+## 8. Évaluation YOLOv8s (cross-dataset Caltech → INRIA)
 Après l’entraînement sur Caltech, on réutilise le même modèle :
 
 yolo detect val \
@@ -302,6 +246,17 @@ F1 et PR détaillés dans l’article (courbes PR/F1 + matrice de confusion): **
 
 Dans cet article, c’est ce cas Caltech → INRIA qui est considéré comme
 meilleur scénario global (modèle entraîné sur un dataset plus difficile et testé sur un plus simple).
+
+
+## 9. Résultats de détection
+
+Haar + SVM (Caltech - Caltech/ INRIA - INRIA)
+<p align="center"> <img src="images/haar_caltech_1.png" width="260"/> <img src="images/haar_caltech_2.png" width="260"/> </p> <p align="center"> <img src="images/haar_inria_1.png" width="260"/> <img src="images/haar_inria_2.png" width="260"/> </p>
+HOG + SVM (INRIA - INRIA)
+<p align="center"> <img src="images/hog_inria_1.png" width="260"/> <img src="images/hog_inria_2.png" width="260"/> </p>
+YOLOv8s (modèle entraîné sur Caltech, testé sur INRIA)
+<p align="center"> <img src="images/yolo_caltech_inria_1.jpg" width="260"/> <img src="images/yolo_caltech_inria_2.jpg" width="260"/> </p>
+
 
 # 10. Suivi multi-objets
 ## 10.1 DeepSORT (ReID MobileNet)
@@ -475,7 +430,17 @@ scripts/eval_MOT.py
 
 pour obtenir les métriques IDF1, MOTA, etc., comme dans l’article.
 
-# 11. Reproductibilité (résumé)
+## 11. Résultats de suivi
+Les vidéos finales de suivi sont dans :
+
+[Voir la vidéo Bytetrack](https://bizoffice4827-my.sharepoint.com/:v:/g/personal/technicien_mrp92_fr/IQAaIrXX4PK9TIhSjS7_q021AbbQRkKVM1pONkk9cDbHsRI?e=ok9DhC)
+
+ou
+
+[Voir la vidéo DeepSort](https://bizoffice4827-my.sharepoint.com/:v:/g/personal/technicien_mrp92_fr/IQBHNRAXR811TrvHZ0TlRg96AX2TmrvCqu6MQ3_LM9kQlb8?e=KR0Vzy)
+
+
+# 12. Reproductibilité (résumé)
 
 - Charger l’environnement Trilium (Section 6)
 
@@ -507,7 +472,7 @@ pour obtenir les métriques IDF1, MOTA, etc., comme dans l’article.
 
 - Lancer ByteTrack avec yolo track ... tracker="bytetrack.yaml".
 
-# 12. Modèle final du projet
+# 13. Modèle final du projet
 Le modèle unique utilisé dans tous les résultats de l’article est : modeles/caltech_person/weights/best.pt
 - entraîné sur Caltech
 
